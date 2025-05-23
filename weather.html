@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Перевірка погоди</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Roboto', sans-serif; margin: 20px; text-align: center; }
+    h1 { color: #333; }
+    input, button { padding: 10px; font-size: 16px; margin: 5px; }
+    #weatherResult { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Перевірка погоди</h1>
+  <input type="text" id="cityInput" placeholder="Введіть назву міста (наприклад, Kyiv)">
+  <button onclick="getWeather()">Отримати погоду</button>
+  <div id="weatherResult"></div>
+
+  <script>
+    async function getWeather() {
+      const city = document.getElementById('cityInput').value || 'Kyiv';
+      const apiKey = '2c224a3022617039af1bf210b3836dbf';
+      const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
+    
+      const response = await fetch(url);
+      const data = await response.json();
+
+      const temp = Math.round(data.main.temp - 273.15);
+      const feelsLike = Math.round(data.main.feels_like - 273.15);
+      const windSpeed = data.wind.speed;
+      const description = data.weather[0].description;
+      const date = new Date().toDateString();
+
+      const weatherData = `
+        <h2>Погода в місті ${city}</h2>
+        <p>Температура: ${temp}°C</p>
+        <p>Відчувається як: ${feelsLike}°C</p>
+        <p>Швидкість вітру: ${windSpeed} м/с</p>
+        <p>Опис: ${description}</p>
+        <p>Дата: ${date}</p>
+      `;
+      document.getElementById('weatherResult').innerHTML = weatherData;
+    }
+  </script>
+</body>
+</html>
